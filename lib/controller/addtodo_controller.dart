@@ -7,6 +7,8 @@ class AddTodoController extends GetxController {
   RxBool timeCollected = false.obs;
   RxString date = ''.obs;
   RxBool dateCollected = false.obs;
+  RxBool personal = true.obs;
+  RxBool team = false.obs;
 
   void collectTime(BuildContext context) {
     showTimePicker(

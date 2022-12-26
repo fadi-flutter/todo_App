@@ -210,7 +210,9 @@ class LoginScreen extends StatelessWidget {
                                                   .make(),
                                               networkImage: facebookImage,
                                               imageheight: sizeh * 0.07,
-                                              imagewidth: sizew * 0.08, onpressed: () {  },
+                                              imagewidth: sizew * 0.08, onpressed: () { 
+                                                controller.loginwithfacebook(context);
+                                               },
                                             )
                                           ],
                                         )

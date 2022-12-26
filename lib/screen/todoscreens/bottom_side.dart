@@ -67,7 +67,7 @@ class Bottomside extends StatelessWidget {
                               .size(sizeh * 0.025)
                               .fontWeight(FontWeight.w600)
                               .make(),
-                          const TeamOrPersonal()
+                           TeamOrPersonal()
                         ],
                       ),
                     ),

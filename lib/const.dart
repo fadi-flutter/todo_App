@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -25,3 +26,4 @@ FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 User? user = firebaseAuth.currentUser;
 const String collectionUsers = 'Users';
 GoogleSignIn googleSignIn = GoogleSignIn();
+FacebookAuth facebookAuth = FacebookAuth.instance;

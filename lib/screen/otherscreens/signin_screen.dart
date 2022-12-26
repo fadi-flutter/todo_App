@@ -194,6 +194,7 @@ class SigninScreen extends StatelessWidget {
                                                 imageheight: sizeh * 0.05,
                                                 imagewidth: sizew * 0.06,
                                                 onpressed: () {
+                                                  //login with google
                                                   controller.signInWithGoogle(
                                                       context);
                                                 },
@@ -206,7 +207,10 @@ class SigninScreen extends StatelessWidget {
                                                 networkImage: facebookImage,
                                                 imageheight: sizeh * 0.07,
                                                 imagewidth: sizew * 0.08,
-                                                onpressed: () {},
+                                                onpressed: () {
+                                                  //login with facebook
+                                                  controller.loginwithfacebook(context);
+                                                },
                                               )
                                             ],
                                           )
