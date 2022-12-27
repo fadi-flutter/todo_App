@@ -30,7 +30,74 @@ class AuthController extends GetxController {
       ispasswordVisible(true);
     }
   }
-//this function signin user with facebook and save info in firebase
+
+//this fuction createUserWithEmail and save it to firebase with user id as collection
+  Future createUserWithEmail() async {
+    try {
+      isLoading(true);
+      await firebaseAuth.createUserWithEmailAndPassword(
+          email: emailCsign.text, password: passwordCsign.text);
+
+      await firebaseFirestore.collection(collectionUsers).doc(user!.uid).set({
+        'userID': user!.uid,
+        'userName': usernameCsign.text,
+        'email': emailCsign.text,
+        'createdAt': DateTime.now()
+      });
+      isLoading(false);
+      Get.off(() =>  TodolistScreen());
+    } on Exception catch (e) {
+      Get.rawSnackbar(title: 'Error', message: e.toString());
+    }
+  }
+
+//this function login user with email
+  loginUserWithEmail(context) async {
+    try {
+      isLoading(true);
+      await firebaseAuth.signInWithEmailAndPassword(
+          email: emailClogin.text, password: passwordClogin.text);
+      isLoading(false);
+      Get.offAll(() =>  TodolistScreen());
+    } on Exception catch (e) {
+      VxToast.show(context, msg: e.toString());
+    }
+  }
+
+//this function signin user with google and save info in firebase
+//if user is already logged in then don't store info
+  signInWithGoogle(context) async {
+    try {
+      isLoading(true);
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            idToken: googleSignInAuthentication.idToken,
+            accessToken: googleSignInAuthentication.accessToken);
+        // Getting users credential
+        await firebaseAuth.signInWithCredential(authCredential);
+        if (user != null) {
+          await firebaseFirestore
+              .collection(collectionUsers)
+              .doc(user!.uid)
+              .set({
+            'userID': user!.uid,
+            'userName': googleSignInAccount.displayName,
+            'email': googleSignInAccount.email,
+            'createdAt': DateTime.now()
+          });
+        }
+        isLoading(false);
+      }
+      Get.offAll(() => TodolistScreen());
+    } on Exception catch (e) {
+      VxToast.show(context, msg: e.toString());
+    }
+  }
+  //this function signin user with facebook and save info in firebase
 //if user is already logged in then don't store info
 
   loginwithfacebook(context) async {
@@ -68,68 +135,16 @@ class AuthController extends GetxController {
     }
   }
 
-//this fuction createUserWithEmail and save it to firebase with user id as collection
-  Future createUserWithEmail() async {
-    try {
-      isLoading(true);
-      await firebaseAuth.createUserWithEmailAndPassword(
-          email: emailCsign.text, password: passwordCsign.text);
-
-      await firebaseFirestore.collection(collectionUsers).doc(user!.uid).set({
-        'userID': user!.uid,
-        'userName': usernameCsign.text,
-        'email': emailCsign.text,
-        'createdAt': DateTime.now()
-      });
-      isLoading(false);
-      Get.off(() => const TodolistScreen());
-    } on Exception catch (e) {
-      Get.rawSnackbar(title: 'Error', message: e.toString());
-    }
-  }
-
-//this function login user with email
-  loginUserWithEmail(context) async {
-    try {
-      isLoading(true);
-      await firebaseAuth.signInWithEmailAndPassword(
-          email: emailClogin.text, password: passwordClogin.text);
-      isLoading(false);
-      Get.offAll(() => const TodolistScreen());
-    } on Exception catch (e) {
-      VxToast.show(context, msg: e.toString());
-    }
-  }
-
-//this function signin user with google and save info in firebase
-//if user is already logged in then don't store info
-  signInWithGoogle(context) async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleSignInAccount.authentication;
-        final AuthCredential authCredential = GoogleAuthProvider.credential(
-            idToken: googleSignInAuthentication.idToken,
-            accessToken: googleSignInAuthentication.accessToken);
-        // Getting users credential
-        await firebaseAuth.signInWithCredential(authCredential);
-        if (user != null) {
-          await firebaseFirestore
-              .collection(collectionUsers)
-              .doc(user!.uid)
-              .set({
-            'userID': user!.uid,
-            'userName': googleSignInAccount.displayName,
-            'email': googleSignInAccount.email,
-            'createdAt': DateTime.now()
-          });
-        }
-      }
+  isUserMember() {
+    if (user != null) {
+      log(user!.uid);
       Get.offAll(() => TodolistScreen());
-    } on Exception catch (e) {
-      VxToast.show(context, msg: e.toString());
     }
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    isUserMember();
   }
 }

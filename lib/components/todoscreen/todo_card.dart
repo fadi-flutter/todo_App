@@ -1,11 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_flutter/controller/addtodo_controller.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../const.dart';
 
 class Todocard extends StatelessWidget {
-  const Todocard({super.key, required this.index});
+  const Todocard(
+      {super.key,
+      required this.index,
+      required this.doc,
+      required this.addTodoController});
   final int index;
+  final DocumentSnapshot doc;
+  final AddTodoController addTodoController;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +60,18 @@ class Todocard extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                'Design UI ToDo App'
+                                doc['taskTitle']
+                                    .toString()
                                     .text
                                     .size(sizeh * 0.023)
                                     .bold
+                                    .uppercase
                                     .maxLines(1)
                                     .ellipsis
                                     .overflow(TextOverflow.fade)
                                     .make(),
                                 2.heightBox,
-                                'Friday, 17 Dec 2022'
+                                '${doc['taskTime']}, ${doc['taskDate']}'
                                     .text
                                     .color(purple)
                                     .size(sizeh * 0.017)
@@ -75,7 +86,7 @@ class Todocard extends StatelessWidget {
                             radius: sizeh * 0.033,
                             backgroundColor: todopageBg,
                             child: Icon(
-                              Icons.group,
+                              doc['team'] == 'true' ? Icons.group : Icons.man,
                               size: sizeh * 0.033,
                               color: purple,
                             ),
@@ -98,14 +109,15 @@ class Todocard extends StatelessWidget {
                       children: [
                         'Description :'
                             .text
-                            .size(sizeh * 0.019)
+                            .size(sizeh * 0.025)
                             .color(purple)
                             .bold
                             .make(),
                         SizedBox(
                           height: sizeh * 0.01,
                         ),
-                        'This isen you nebase and changn nebase and cha n you nebase and cha n you nebase and chae the description there.....'
+                        doc['description']
+                            .toString()
                             .text
                             .ellipsis
                             .size(sizeh * 0.018)
@@ -116,16 +128,42 @@ class Todocard extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 2,
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        'Progress :'
-                            .text
-                            .color(purple)
-                            .size(sizeh * 0.02)
-                            .bold
-                            .make(),
-                        2.heightBox,
-                        '47%'.text.size(sizeh * 0.02).make()
+                        doc['team'] == 'true'
+                            ? 'Team Task'
+                                .text
+                                .color(purple)
+                                .size(sizeh * 0.025)
+                                .bold
+                                .make()
+                            : 'Personal Task'
+                                .text
+                                .color(purple)
+                                .size(sizeh * 0.025)
+                                .bold
+                                .make(),
+                        Checkbox(
+                            value: doc['pending'] == 'true' ? true : false,
+                            onChanged: ((value) {
+                              addTodoController.pending(value);
+                              addTodoController.updateTodo(doc);
+                            })),
+                        Row(
+                          children: [
+                            'Status : '
+                                .text
+                                .color(purple)
+                                .size(sizeh * 0.025)
+                                .bold
+                                .make(),
+                            2.heightBox,
+                            doc['pending'] == 'false'
+                                ? 'Pending'.text.size(sizeh * 0.02).make()
+                                : 'Completed'.text.size(sizeh * 0.02).make()
+                          ],
+                        )
                       ],
                     ),
                   )

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:ui_flutter/components/materialbutton.dart';
 import 'package:ui_flutter/components/textfield.dart';
 import 'package:ui_flutter/screen/otherscreens/login_screen.dart';
-import 'package:ui_flutter/screen/todoscreens/todolist_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:get/get.dart';
 import 'package:ui_flutter/controller/auth_controller.dart';
 import '../../const.dart';
 
+// ignore: must_be_immutable
 class SigninScreen extends StatelessWidget {
   static const id = 'SigninScreen';
   SigninScreen({super.key});
-  var authController = Get.put(AuthController());
+  var authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     double sizew = MediaQuery.of(context).size.width;
@@ -209,7 +209,8 @@ class SigninScreen extends StatelessWidget {
                                                 imagewidth: sizew * 0.08,
                                                 onpressed: () {
                                                   //login with facebook
-                                                  controller.loginwithfacebook(context);
+                                                  controller.loginwithfacebook(
+                                                      context);
                                                 },
                                               )
                                             ],

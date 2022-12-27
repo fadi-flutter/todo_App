@@ -4,9 +4,11 @@ import 'package:ui_flutter/screen/otherscreens/signin_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:ui_flutter/const.dart';
 
+import '../../controller/auth_controller.dart';
+
 class WelcomePage extends StatelessWidget {
-  static const id = 'WelcomePage';
-  const WelcomePage({super.key});
+   WelcomePage({super.key});
+  var authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {

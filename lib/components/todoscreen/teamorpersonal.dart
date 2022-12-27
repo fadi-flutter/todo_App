@@ -5,8 +5,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../const.dart';
 
+// ignore: must_be_immutable
 class TeamOrPersonal extends StatelessWidget {
   var addTodoController = Get.find<AddTodoController>();
+
+  TeamOrPersonal({super.key});
   @override
   Widget build(BuildContext context) {
     double sizew = MediaQuery.of(context).size.width;

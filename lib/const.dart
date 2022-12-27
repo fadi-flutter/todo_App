@@ -25,5 +25,6 @@ FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 User? user = firebaseAuth.currentUser;
 const String collectionUsers = 'Users';
+const String collectionTodos = 'Todos';
 GoogleSignIn googleSignIn = GoogleSignIn();
 FacebookAuth facebookAuth = FacebookAuth.instance;

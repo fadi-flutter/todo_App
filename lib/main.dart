@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         fontFamily: 'Ubuntu',
       ),
-      home:const WelcomePage(),
+      home: WelcomePage(),
     );
   }
 }

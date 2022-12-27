@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../const.dart';
 
 class TextfieldWidget extends StatelessWidget {
-  TextfieldWidget({
+  const TextfieldWidget({
     super.key,
     this.labelText = 'User Name',
     this.obscureText = false,

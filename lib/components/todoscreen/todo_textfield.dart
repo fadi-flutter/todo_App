@@ -5,6 +5,7 @@ import '../../const.dart';
 Widget todotextField(context,
     {String labeltext = 'Add Task...',
     required double height,
+    required TextEditingController controller,
     int maxlines = 1}) {
   double sizew = MediaQuery.of(context).size.width;
   double sizeh = MediaQuery.of(context).size.height;
@@ -16,6 +17,7 @@ Widget todotextField(context,
       width: sizew * 0.82,
       height: height,
       child: TextField(
+        controller: controller,
         maxLines: maxlines,
         decoration: InputDecoration(
           hintText: labeltext,
