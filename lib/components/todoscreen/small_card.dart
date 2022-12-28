@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_flutter/controller/addtodo_controller.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../const.dart';
 import 'iconbutton.dart';
 
-Widget smallcardWidget({context,required int index}) {
+Widget smallcardWidget(
+    {context,
+    required int index,
+    required DocumentSnapshot doc,
+    required AddTodoController addTodoController}) {
   double sizew = MediaQuery.of(context).size.width;
   double sizeh = MediaQuery.of(context).size.height;
   return Center(
@@ -16,9 +22,9 @@ Widget smallcardWidget({context,required int index}) {
           Container(
             height: sizeh * 0.16,
             width: sizew * 0.778,
-            decoration:  BoxDecoration(
-              color: index.isEven?purple:grey,
-              borderRadius:const BorderRadius.all(
+            decoration: BoxDecoration(
+              color: index.isEven ? purple : grey,
+              borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
             ),
@@ -43,15 +49,18 @@ Widget smallcardWidget({context,required int index}) {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          'Design UI  APP'
+                          doc['taskTitle']
+                              .toString()
                               .text
+                              .uppercase
                               .ellipsis
                               .size(sizeh * 0.024)
                               .bold
                               .lineThrough
                               .make(),
                           3.heightBox,
-                          'this i sdescription description description description don'
+                          doc['description']
+                              .toString()
                               .text
                               .ellipsis
                               .size(sizeh * 0.018)
@@ -60,7 +69,14 @@ Widget smallcardWidget({context,required int index}) {
                         ],
                       ),
                     ),
-                    appbarIcons(context, icon: Icons.check)
+                    appbarIcons(
+                        context,
+                        icon:  Icons.check,
+                        onPressed: () {
+                          addTodoController.pending(false);
+                          addTodoController.againUpdateTodo(doc);
+                        },
+                      )
                   ],
                 ),
                 const Divider(
@@ -69,7 +85,7 @@ Widget smallcardWidget({context,required int index}) {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: sizeh * 0.02),
-                  child: 'Today 11:25 PM'
+                  child: '${doc['taskTime']}, ${doc['taskDate']}'
                       .text
                       .size(sizeh * 0.019)
                       .color(purple)

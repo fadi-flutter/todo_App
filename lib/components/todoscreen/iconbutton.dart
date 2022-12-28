@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../const.dart';
 
-Widget appbarIcons(context, {IconData icon = Icons.calendar_month}) {
+Widget appbarIcons(context, {IconData icon = Icons.calendar_month,VoidCallback? onPressed}) {
   double sizew = MediaQuery.of(context).size.width;
   double sizeh = MediaQuery.of(context).size.height;
   return Padding(
@@ -17,9 +17,12 @@ Widget appbarIcons(context, {IconData icon = Icons.calendar_month}) {
           width: 1,
         ),
       ),
-      child: Icon(
-        icon,
-        color: purple,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Icon(
+          icon,
+          color: purple,
+        ),
       ),
     ),
   );

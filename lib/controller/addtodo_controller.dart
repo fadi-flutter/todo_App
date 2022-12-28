@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +7,7 @@ import 'package:ui_flutter/const.dart';
 class AddTodoController extends GetxController {
   var todoitleC = TextEditingController();
   var todoDescriptionC = TextEditingController();
+  var formKey = GlobalKey<FormState>();
   RxString time = ''.obs;
   RxBool timeCollected = false.obs;
   RxString date = ''.obs;
@@ -14,6 +16,8 @@ class AddTodoController extends GetxController {
   RxBool team = false.obs;
   RxBool pending = false.obs;
   RxString currentdocID = ''.obs;
+  RxBool titleValidate = false.obs;
+  RxBool descriptionValidate = false.obs;
   var isLoading = false.obs;
 
   addTodo() async {
@@ -29,7 +33,7 @@ class AddTodoController extends GetxController {
       'personal': personal.toString(),
       'team': team.toString(),
       'taskDate': date.value,
-      'pending' : pending.toString(),
+      'pending': 'false',
       'taskTime': time.value,
       'userID': user!.uid,
       'userName': user!.displayName,
@@ -41,15 +45,17 @@ class AddTodoController extends GetxController {
     isLoading(false);
   }
 
-  
-
   getTodo() {
-    return firebaseFirestore
-        .collection(collectionUsers)
-        .doc(user!.uid)
-        .collection(collectionTodos)
-        .snapshots();
+    if (user != null) {
+      return firebaseFirestore
+          .collection(collectionUsers)
+          .doc(user!.uid)
+          .collection(collectionTodos)
+          .where('pending', isEqualTo: 'false')
+          .snapshots();
+    }
   }
+
   updateTodo(doc) {
     firebaseFirestore
         .collection(collectionUsers)
@@ -57,6 +63,24 @@ class AddTodoController extends GetxController {
         .collection(collectionTodos)
         .doc(doc.id)
         .update({'pending': pending.value.toString()});
+  }
+
+  againUpdateTodo(doc) {
+    firebaseFirestore
+        .collection(collectionUsers)
+        .doc(user!.uid)
+        .collection(collectionTodos)
+        .doc(doc.id)
+        .update({'pending': pending.value.toString()});
+  }
+
+  completeTodo() {
+    return firebaseFirestore
+        .collection(collectionUsers)
+        .doc(user!.uid)
+        .collection(collectionTodos)
+        .where('pending', isEqualTo: 'true')
+        .snapshots();
   }
 
   void collectTime(BuildContext context) {
@@ -89,5 +113,4 @@ class AddTodoController extends GetxController {
       },
     );
   }
-  
 }

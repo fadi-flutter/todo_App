@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -142,6 +143,7 @@ class TodolistScreen extends StatelessWidget {
                       Flexible(
                         flex: 4,
                         child: Swiper(
+                          loop: snapshot.data!.docs.length == 1 ? false : true,
                           pagination: const SwiperPagination(
                             alignment: Alignment.bottomCenter,
                             builder: DotSwiperPaginationBuilder(
@@ -187,12 +189,28 @@ class TodolistScreen extends StatelessWidget {
                       //This is completed todo's
                       Expanded(
                         flex: 3,
-                        child: ListView.builder(
-                          itemCount: 3,
-                          itemBuilder: ((context, index) {
-                            return smallcardWidget(
-                                context: context, index: index);
-                          }),
+                        child: StreamBuilder(
+                          stream: addtodoController.completeTodo(),
+                          builder:
+                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            return snapshot.hasData
+                                ? ListView(
+                                    children: snapshot.data!.docs.mapIndexed(
+                                      (currentValue, index) {
+                                        var doc = snapshot.data!.docs[index];
+                                        return smallcardWidget(
+                                            index: index,
+                                            context: context,
+                                            doc: doc,
+                                            addTodoController:
+                                                addtodoController);
+                                      },
+                                    ).toList(),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                          },
                         ),
                       )
                     ],
