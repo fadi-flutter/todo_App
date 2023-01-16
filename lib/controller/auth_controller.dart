@@ -1,4 +1,6 @@
+
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -32,22 +34,23 @@ class AuthController extends GetxController {
   }
 
 //this fuction createUserWithEmail and save it to firebase with user id as collection
-  Future createUserWithEmail() async {
+  Future createUserWithEmail(context) async {
     try {
       isLoading(true);
       await firebaseAuth.createUserWithEmailAndPassword(
           email: emailCsign.text, password: passwordCsign.text);
-
-      await firebaseFirestore.collection(collectionUsers).doc(user!.uid).set({
-        'userID': user!.uid,
-        'userName': usernameCsign.text,
-        'email': emailCsign.text,
-        'createdAt': DateTime.now()
-      });
+        await firebaseFirestore.collection(collectionUsers).doc(user!.uid).set({
+          'userID': user!.uid,
+          'userName': usernameCsign.text,
+          'email': emailCsign.text,
+          'createdAt': DateTime.now()
+        });
+        Get.off(() => TodolistScreen());
+    
       isLoading(false);
-      Get.off(() =>  TodolistScreen());
-    } on Exception catch (e) {
-      Get.rawSnackbar(title: 'Error', message: e.toString());
+    } catch(e)  {
+      VxToast.show(context, msg: e.toString(),bgColor: black,textColor: white,showTime: 6000);
+      isLoading(false);
     }
   }
 
@@ -58,7 +61,7 @@ class AuthController extends GetxController {
       await firebaseAuth.signInWithEmailAndPassword(
           email: emailClogin.text, password: passwordClogin.text);
       isLoading(false);
-      Get.offAll(() =>  TodolistScreen());
+      Get.offAll(() => TodolistScreen());
     } on Exception catch (e) {
       VxToast.show(context, msg: e.toString());
     }

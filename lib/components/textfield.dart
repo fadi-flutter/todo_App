@@ -10,6 +10,7 @@ class TextfieldWidget extends StatelessWidget {
     this.icon,
     this.iconOnTap,
     this.controller,
+    this.validator,
   });
   final String labelText;
   final bool obscureText;
@@ -17,6 +18,7 @@ class TextfieldWidget extends StatelessWidget {
   final Icon? icon;
   final TextInputType textInputType;
   final VoidCallback? iconOnTap;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +29,14 @@ class TextfieldWidget extends StatelessWidget {
       child: SizedBox(
         height: sizeh * 0.08,
         width: sizew * 0.82,
-        child: TextField(
+        child: TextFormField(
+          validator: validator,
           controller: controller,
           keyboardType: textInputType,
           obscureText: obscureText,
           decoration: InputDecoration(
             labelText: labelText,
-            labelStyle: TextStyle(color: purplelight, fontSize: sizeh * 0.025),
+            labelStyle: TextStyle(color: purplelight, fontSize: sizeh * 0.021),
             suffixIcon: InkWell(onTap: iconOnTap, child: icon),
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(
@@ -48,6 +51,7 @@ class TextfieldWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
+          autofillHints: const [AutofillHints.email],
         ),
       ),
     );

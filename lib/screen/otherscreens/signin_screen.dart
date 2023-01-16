@@ -12,6 +12,7 @@ class SigninScreen extends StatelessWidget {
   static const id = 'SigninScreen';
   SigninScreen({super.key});
   var authController = Get.find<AuthController>();
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     double sizew = MediaQuery.of(context).size.width;
@@ -70,7 +71,7 @@ class SigninScreen extends StatelessWidget {
                               .white
                               .make(),
                           Padding(
-                            padding: EdgeInsets.only(top: sizeh * 0.07),
+                            padding: EdgeInsets.only(top: sizeh * 0.09),
                             child: Stack(
                               alignment: Alignment.bottomCenter,
                               children: [
@@ -103,7 +104,7 @@ class SigninScreen extends StatelessWidget {
                                               .text
                                               .center
                                               .bold
-                                              .size(sizeh * 0.045)
+                                              .size(sizeh * 0.042)
                                               .make(),
                                           SizedBox(
                                             height: sizeh * 0.010,
@@ -112,50 +113,65 @@ class SigninScreen extends StatelessWidget {
                                               .text
                                               .center
                                               .color(purplemedium)
-                                              .size(sizeh * 0.03)
+                                              .size(sizeh * 0.026)
                                               .make(),
                                         ],
                                       ),
-                                      Column(
-                                        children: [
-                                          TextfieldWidget(
-                                            controller:
-                                                controller.usernameCsign,
-                                            icon: const Icon(Icons.account_box),
-                                          ),
-                                          TextfieldWidget(
-                                            controller: controller.emailCsign,
-                                            labelText: 'Email Address',
-                                            icon: const Icon(Icons.email),
-                                          ),
-                                          TextfieldWidget(
-                                            controller:
-                                                controller.passwordCsign,
-                                            obscureText: controller
-                                                    .ispasswordVisible.value
-                                                ? false
-                                                : true,
-                                            icon: controller
-                                                    .ispasswordVisible.value
-                                                ? const Icon(
-                                                    Icons.remove_red_eye_sharp,
-                                                    color: black,
-                                                  )
-                                                : const Icon(
-                                                    Icons.remove_red_eye),
-                                            labelText: 'Password',
-                                            iconOnTap: () {
-                                              controller.passwordVisible();
-                                            },
-                                          )
-                                        ],
+                                      Form(
+                                        key: formKey,
+                                        child: Column(
+                                          children: [
+                                            TextfieldWidget(
+                                              controller:
+                                                  controller.usernameCsign,
+                                              icon:
+                                                  const Icon(Icons.account_box),
+                                            ),
+                                            TextfieldWidget(
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Please enter email';
+                                                }
+                                                return null;
+                                              },
+                                              controller: controller.emailCsign,
+                                              labelText: 'Email Address',
+                                              icon: const Icon(Icons.email),
+                                            ),
+                                            TextfieldWidget(
+                                              controller:
+                                                  controller.passwordCsign,
+                                              obscureText: controller
+                                                      .ispasswordVisible.value
+                                                  ? false
+                                                  : true,
+                                              icon: controller
+                                                      .ispasswordVisible.value
+                                                  ? const Icon(
+                                                      Icons
+                                                          .remove_red_eye_outlined,
+                                                      color: black,
+                                                    )
+                                                  : const Icon(
+                                                      Icons.remove_red_eye),
+                                              labelText: 'Password',
+                                              iconOnTap: () {
+                                                controller.passwordVisible();
+                                              },
+                                            )
+                                          ],
+                                        ),
                                       ),
                                       Column(
                                         children: [
                                           MaterialButtonWidget(
                                             onTap: () async {
-                                              await controller
-                                                  .createUserWithEmail();
+                                              if (formKey.currentState!
+                                                  .validate()) {
+                                                await controller
+                                                    .createUserWithEmail(
+                                                        context);
+                                              }
                                             },
                                           ),
                                           Padding(

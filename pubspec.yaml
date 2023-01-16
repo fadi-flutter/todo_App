@@ -45,6 +45,7 @@ dependencies:
   cloud_firestore: ^4.3.0
   google_sign_in: ^5.4.2
   flutter_facebook_auth: ^5.0.6
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
